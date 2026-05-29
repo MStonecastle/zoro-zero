@@ -32,13 +32,13 @@ services:
       - "127.0.0.1:11434:11434"
     environment:
       - OLLAMA_FLASH_ATTENTION=1
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]
+#    deploy:
+#      resources:
+#        reservations:
+#          devices:
+#            - driver: nvidia
+#              count: all
+#              capabilities: [gpu]
     networks:
       - zoro-network
 

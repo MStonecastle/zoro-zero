@@ -1,0 +1,28 @@
+# =============================================================================
+# Zoro-Zero: GPU Acceleration Override (Docker Compose)
+# Licensed under the MIT License (https://opensource.org/license/mit)
+# Team-404, Michelle Stonecastle-20260527: v1.0.0
+#
+# DESCRIPTION:
+#   This file contains the hardware reservation blocks necessary to pass
+#   NVIDIA GPUs into the containerized services. It is designed to be 
+#   dynamically merged with the base docker-compose.yml by the 
+#   Start-Zoro-Zero.ps1 script when compatible hardware is detected.
+#
+# USAGE:
+#   Do not run this file directly. It should be passed as an override:
+#   docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d
+#
+# NOTES:
+#   Requires the NVIDIA Container Toolkit to be installed on the host or WSL2.
+# =============================================================================
+
+services:
+  ollama:
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
