@@ -15,6 +15,10 @@ All components are engineered to spin up in a fully isolated, secure, and GPU-ac
 
 ## 🚀 Out-of-the-Box Turnkey Architecture (Zero Configuration)
 
+### Pre-Built Image Orchestration
+You will notice this repository does **not** contain a `Dockerfile`. This is an intentional, industry-standard architectural choice. Zoro-Zero is engineered for pure deployment orchestration rather than local compilation. Instead of building the components from raw source code locally, it leverages Docker Compose to download and network **pre-built, production-ready images** securely hosted on Docker Hub (`ollama/ollama:latest` and `nousresearch/hermes-agent:latest`). By omitting a local build step, we guarantee that every student executes exactly the same compiled binaries, eliminating compilation errors.
+
+### Zero-Configuration Launch
 To ensure a seamless, friction-free educational setup, the Zoro-Zero container stack is pre-seeded with a production-grade configuration. Unlike standard Hermes installations that require manual file editing after first boot, **Zoro-Zero runs turnkey immediately out-of-the-box**.
 
 This is achieved by mounting a workspace-level pre-configured `config.yaml` directly over the container's supervisor directory:
@@ -189,13 +193,24 @@ When a student clones the Zoro-Zero repository, the actual `.env` file is exclud
 
 ---
 
-### 2. Build and Boot the Stack
-Once the `.env` parameters have been verified and documented, initialize the multi-container stack:
+### 2. Boot the Container Stack
+Launch the isolated container services using the pre-flight hardware detection script. By double-clicking the `.bat` file (or running it in the terminal), you automatically bypass Windows script restrictions, check if you have an NVIDIA GPU, and seamlessly deploy the correct Compose configuration:
 
 ```powershell
-docker compose up -d
+.\Start-Zoro-Zero.bat
 ```
-*   *Compose Mechanics*: Reads `docker-compose.yml`, injects variables from `.env`, pulls target container images, constructs the private `zoro-network` bridge, sets up the physical host volume bind-mounts, and boots all services in detached (`-d`) background mode.
+
+> [!NOTE]
+> **Security Transparency: How the `.bat` wrapper works**
+> Windows restricts running `.ps1` files by default to prevent malicious scripts from executing (Execution Policy). To provide a turnkey experience, we use `Start-Zoro-Zero.bat` as a secure bridge.
+> Inside the file, it executes this command: `powershell.exe -ExecutionPolicy Bypass -NoProfile -File "%~dp0Start-Zoro-Zero.ps1" %*`
+> *   `Bypass`: Only drops the restriction for this *single* session, keeping your system secure.
+> *   `%~dp0`: Dynamically resolves to the absolute folder path where the `.bat` file lives. This ensures it reliably finds the `.ps1` script without relative path errors.
+> *   `%*`: Forwards any command line arguments you provide directly into the PowerShell script.
+> 
+> You are encouraged to open `Start-Zoro-Zero.bat` in a text editor to verify its contents!
+
+*   *Compose Mechanics*: The script probes `nvidia-smi`. If successful, it merges the GPU reservation override. It then reads `docker-compose.yml`, injects variables from `.env`, pulls target container images, constructs the private `zoro-network` bridge, sets up the physical host volume bind-mounts, and boots all services in background mode.
 *   *Reference Specification*: [Docker Compose Storage Bind-Mount Reference](https://docs.docker.com/storage/bind-mounts/)
 
 ---
@@ -220,8 +235,20 @@ zoro-ollama-init   ollama-init   exited (0)
 
 ---
 
-### 4. Automated 64k Model Compilation
-Unlike older architectures, Zoro-Zero handles the complex compilation of the context window autonomously. When `docker compose up -d` is run, an ephemeral `zoro-ollama-init` container detects when the engine is healthy, executes `ollama create qwen3:8b-64k -f /root/.ollama/Modelfile` to hard-configure the 65,536 token KV VRAM parameter natively, and gracefully exits.
+### 3. Automated 64k Model Compilation
+Unlike older architectures, Zoro-Zero handles the complex compilation of the context window autonomously. When the startup script is run, an ephemeral `zoro-ollama-init` container detects when the engine is healthy, executes `ollama create qwen3:8b-64k -f /root/.ollama/Modelfile` to hard-configure the 65,536 token KV VRAM parameter natively, and gracefully exits.
+
+> [!WARNING]
+> **Compilation Takes Several Minutes**
+> The model compiler must transfer and rewrite multiple gigabytes of weights to inject the new context window. This process can take several minutes. 
+> 
+> If you are worried the deployment is stuck:
+> 1. Open the **Docker Desktop** application.
+> 2. Click on the `zoro-zero` stack to expand it.
+> 3. Click on the `zoro-ollama-init` container.
+> 4. Select the **Logs** tab.
+> 
+> Here, you will see real-time output showing things like `transferring` or `writing layer`. When the compilation is fully finished, the log will simply print `success`.
 
 > [!TIP]
 > **Why does `zoro-ollama-init` say "Exited" in Docker Desktop?**

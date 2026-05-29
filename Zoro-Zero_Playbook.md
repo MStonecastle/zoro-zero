@@ -63,11 +63,11 @@ For a more visual, user-friendly experience, students can utilize **Docker Deskt
 Follow these standard commands in a PowerShell window inside `C:\Users\<username>\Zoro-Zero` (or your active workspace root) to operate the stack daily.
 
 ### 1. Powering On the Stack
-Bring the multi-container stack online in detached mode:
+Bring the multi-container stack online in detached mode using the hardware-aware pre-flight script:
 ```powershell
-docker compose up -d
+.\Start-Zoro-Zero.bat
 ```
-*Expected Outcome*: Docker will verify images, initialize the private bridge network, and spin up the four containers.
+*Expected Outcome*: The script will automatically verify Docker dependencies and detect hardware capabilities. If an NVIDIA GPU is detected, it will apply the `docker-compose.gpu.yml` override for hardware acceleration. Otherwise, it will safely deploy the baseline CPU-only profile. Docker will then verify images, initialize the private bridge network, and spin up the four containers.
 
 ### 2. Verifying Service Telemetry
 Confirm that all containers are healthy and running without crash loops:

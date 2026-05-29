@@ -30,6 +30,21 @@ Built under a DevSecOps **Zero-Trust** philosophy, this repository allows studen
 
 ---
 
+## 🏗️ Architecture & Image Orchestration
+
+Zoro-Zero is engineered for pure deployment orchestration rather than local compilation. You will notice this repository does **not** contain a `Dockerfile`. 
+
+This is an industry-standard practice when dealing with robust, vendor-supplied container software. Instead of building the components from raw source code locally, Zoro-Zero leverages `docker-compose.yml` to download, orchestrate, and network **pre-built, production-ready images** hosted securely on Docker Hub:
+*   `ollama/ollama:latest`
+*   `nousresearch/hermes-agent:latest`
+
+By omitting a local build step, we guarantee that every student executes exactly the same compiled binaries, eliminating "it works on my machine" compilation errors and ensuring a friction-free turnkey setup.
+
+### 🛡️ Secure Execution Wrapper
+To launch the deployment, this repository provides `Start-Zoro-Zero.bat`. Windows natively blocks `.ps1` (PowerShell) scripts from executing to protect users from malware. The `.bat` file acts as a transparent, secure bridge that temporarily bypasses the Execution Policy for that single session, ensuring a seamless start without permanently lowering your system's security posture. Students are encouraged to open the `.bat` file in any text editor to verify its contents.
+
+---
+
 ## 🗺️ Architectural Port Map
 
 | Container Name | Service | Host Port | Mapped Interface | Purpose |
