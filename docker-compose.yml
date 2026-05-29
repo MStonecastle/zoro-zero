@@ -1,0 +1,132 @@
+# =============================================================================
+# Zoro-Zero: Multi-Container Orchestration (Docker Compose)
+# Licensed under the MIT License (https://opensource.org/license/mit)
+# Team-404, Michelle Stonecastle-20260527: v1.0.0
+#
+# DESCRIPTION:
+#   Orchestrates the offline turnkey local AI stack: zoro-ollama (Inference),
+#   zoro-gateway ( Nous Hermes Agent REPL), and zoro-dashboard (Visual Monitor).
+#
+# NOTES:
+#   - Excludes Linux host networking to ensure Windows cross-compatibility.
+#   - Isolates endpoints behind 'zoro-network' bridge, binding port 11434 (Ollama)
+#     and 9119 (Dashboard) strictly to loopback interface 127.0.0.1 (Zero-Trust).
+# =============================================================================
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: zoro-ollama
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 15s
+    volumes:
+      - ./.ollama/models:/root/.ollama
+      - ./Modelfile:/root/.ollama/Modelfile
+    ports:
+      # Bound strictly to the host's loopback interface to isolate it from external LAN access
+      - "127.0.0.1:11434:11434"
+    environment:
+      - OLLAMA_FLASH_ATTENTION=1
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    networks:
+      - zoro-network
+
+  ollama-init:
+    image: ollama/ollama:latest
+    container_name: zoro-ollama-init
+    restart: "no"
+    depends_on:
+      ollama:
+        condition: service_healthy
+    volumes:
+      - ./Modelfile:/root/.ollama/Modelfile
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    networks:
+      - zoro-network
+    command: ["create", "qwen3:8b-64k", "-f", "/root/.ollama/Modelfile"]
+
+  gateway:
+    image: nousresearch/hermes-agent:latest
+    container_name: zoro-gateway
+    restart: unless-stopped
+    depends_on:
+      ollama-init:
+        condition: service_completed_successfully
+      ollama:
+        condition: service_healthy
+    volumes:
+      # Maps configuration, session logs, and active memory to the host Windows User Profile
+      - ${USERPROFILE}/.hermes:/opt/data
+      - ./config.yaml:/opt/data/config.yaml
+      # Read-only template mirrors
+      - ./SOUL.md:/templates/SOUL.md:ro
+      - ./MEMORY.md:/templates/MEMORY.md:ro
+      - ./USER.md:/templates/USER.md:ro
+    environment:
+      - HERMES_UID=10000
+      - HERMES_GID=10000
+      # Wire gateways to the environment variables
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
+      - TELEGRAM_ALLOWED_USERS=${TELEGRAM_ALLOWED_USERS:-}
+      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN:-}
+      - DISCORD_ALLOWED_USERS=${DISCORD_ALLOWED_USERS:-}
+    networks:
+      - zoro-network
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        echo "Seeding Zoro-Zero Brain..."
+        mkdir -p /opt/data/memories
+        
+        if [ ! -f /opt/data/SOUL.md ] && [ -f /templates/SOUL.md ]; then 
+          cp /templates/SOUL.md /opt/data/SOUL.md
+        fi
+        
+        if [ ! -f /opt/data/memories/MEMORY.md ] && [ -f /templates/MEMORY.md ]; then 
+          cp /templates/MEMORY.md /opt/data/memories/MEMORY.md
+        fi
+        
+        if [ ! -f /opt/data/memories/USER.md ] && [ -f /templates/USER.md ]; then 
+          cp /templates/USER.md /opt/data/memories/USER.md
+        fi
+        
+        exec /init /opt/hermes/docker/main-wrapper.sh "$$@"
+      - "--"
+    command: ["gateway", "run"]
+
+  dashboard:
+    image: nousresearch/hermes-agent:latest
+    container_name: zoro-dashboard
+    restart: unless-stopped
+    depends_on:
+      - gateway
+    volumes:
+      - ${USERPROFILE}/.hermes:/opt/data
+      - ./config.yaml:/opt/data/config.yaml
+    environment:
+      - HERMES_UID=10000
+      - HERMES_GID=10000
+      - HERMES_DASHBOARD_HOST=0.0.0.0
+    ports:
+      # Exposes the graphical interface strictly to localhost on port 9119
+      - "127.0.0.1:9119:9119"
+    networks:
+      - zoro-network
+    command: ["dashboard", "--host", "0.0.0.0", "--port", "9119", "--no-open", "--insecure"]
+
+networks:
+  zoro-network:
+    driver: bridge

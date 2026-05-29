@@ -1,0 +1,22 @@
+name: Link Checker
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '0 0 * * 0' # Weekly run on Sundays
+
+jobs:
+  check-links:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Link Checker
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --verbose --no-progress './**/*.md'
+          fail: true

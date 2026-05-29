@@ -1,0 +1,40 @@
+# =============================================================================
+# Zoro-Zero: Version Control Exclusions (.gitignore)
+# Licensed under the MIT License (https://opensource.org/license/mit)
+# Team-404, Michelle Stonecastle-20260527: v1.0.0
+#
+# DESCRIPTION:
+#   Shields sensitive credentials (.env), heavy multi-gigabyte models (.ollama/),
+#   external vendor source packages (upstream-hermes-agent/), and standard
+#   operating system and editor trash from being committed to GitHub.
+# =============================================================================
+
+# Local Upstream Source
+upstream-hermes-agent/
+
+# Local Environment & Secrets
+.env
+
+# Local Container State & Ollama Models
+.ollama/
+
+# IDEs & Editor Configuration Files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# AI Agent Configs & Brain Caches
+.gemini/
+
+# Internal Documentation & Personal Runlogs
+.docs/
+
+

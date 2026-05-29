@@ -1,0 +1,20 @@
+# =============================================================================
+# Zoro-Zero: Custom Ollama Modelfile
+# Licensed under the MIT License (https://opensource.org/license/mit)
+# Team-404, Michelle Stonecastle-20260527: v1.0.0
+#
+# DESCRIPTION:
+#   Custom model specification that overrides Ollama's default runtime 4K context
+#   window, pre-allocating a dedicated 64,000-token KV Cache in GPU VRAM.
+#
+# NOTES:
+#   - Base model: Nous Hermes 3 8B.
+#   - Allocates ~4.2 GB of VRAM specifically for the key-value context layer.
+# =============================================================================
+
+# Inherits from the highly agentic Qwen 3 8B model
+FROM qwen3:8b
+
+# Allocate a physical 65,536 token context window (allocates ~4.2 GB VRAM cache)
+PARAMETER num_ctx 65536
+
