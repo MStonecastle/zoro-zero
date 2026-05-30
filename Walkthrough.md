@@ -189,7 +189,7 @@ When a student clones the Zoro-Zero repository, the actual `.env` file is exclud
     *   *Reference Specification*: [Telegram BotFather API Reference](https://core.telegram.org/bots/features#botfather)
 *   **`DISCORD_BOT_TOKEN`, `DISCORD_ALLOWED_USERS`**
     *   *System Mechanics*: Authenticates the gateway against Discord's WebSocket API. Under the hood, this establishes a persistent gateway connection. Like the Telegram gateway, the user ACL filters messages before passing them to the supervisor logic, shifting security left to the ingress boundary.
-    *   *Reference Specification*: [Discord Developer Portal Application Guide](https://discord.com/developers/docs/quickstart)
+    *   *Reference Specification*: [Discord Developer Portal Application Guide](https://discord.com/developers/docs/intro)
 
 ---
 

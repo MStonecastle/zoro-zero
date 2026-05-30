@@ -10,7 +10,7 @@ Author: "Team-404, Michelle Stonecastle-20260527: v1.0.0"
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Docker](https://img.shields.io/badge/Docker-Containerized-blue.svg)](https://www.docker.com/)
 [![Ollama](https://img.shields.io/badge/Ollama-Inference-orange.svg)](https://ollama.com/)
-[![Model: Qwen 3](https://img.shields.io/badge/Model-Qwen_3_8B-purple.svg)](https://ollama.com/library/qwen3)
+![Model: Qwen 3](https://img.shields.io/badge/Model-Qwen_3_8B-purple.svg)
 
 **Zoro-Zero** is an offline-capable, fully containerized, GPU-accelerated local AI agent stack. It orchestrates the highly agentic **Qwen 3 8B** model alongside **Ollama** and the **Nous Hermes Agent framework**, deployed securely in isolated Docker containers with zero cloud dependencies.
 
@@ -86,7 +86,7 @@ docker exec -it zoro-gateway hermes chat
 *   Type `/exit` or press **Ctrl+D** to close the session.
 
 ### 4. Access the Dashboard
-Navigate your web browser to [http://127.0.0.1:9119](http://127.0.0.1:9119) to visually monitor execution, review pairing logs, and manage skills.
+Navigate your web browser to `http://127.0.0.1:9119` to visually monitor execution, review pairing logs, and manage skills.
 
 ### 5. Safe Teardown
 When your session is complete, destroy the stack to release system RAM. Because of the host bind-mounts, this is 100% safe and your data will persist:
