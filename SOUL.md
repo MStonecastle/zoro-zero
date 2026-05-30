@@ -1,7 +1,8 @@
 ---
-Zoro-Zero: Core Agent Identity (SOUL.md)
-Licensed under the MIT License (https://opensource.org/license/mit)
-Michelle Stonecastle-20260527: v1.0.0
+Identity: Zoro-Zero Core Agent (SOUL.md)
+License: "MIT License (https://opensource.org/license/mit)"
+Author: Michelle Stonecastle-20260527
+Version: v1.0.0
 ---
 
 # Identity: Zoro-Zero
