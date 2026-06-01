@@ -38,7 +38,7 @@ This is an industry-standard practice when dealing with robust, vendor-supplied 
 *   `ollama/ollama:latest`
 *   `nousresearch/hermes-agent:latest`
 
-By omitting a local build step, we guarantee that every student executes exactly the same compiled binaries, eliminating "it works on my machine" compilation errors and ensuring a friction-free turnkey setup.
+By omitting a local build step, we guarantee that every student executes exactly the same compiled binaries, eliminating "it works on my machine" compilation errors. This makes the entire stack completely **platform-independent (cross-platform accessible)**, ensuring a friction-free turnkey setup that functions identically whether you are on Windows, macOS, or Linux.
 
 ### 🛡️ Secure Execution Wrapper
 To launch the deployment, this repository provides `Start-Zoro-Zero.bat`. Windows natively blocks `.ps1` (PowerShell) scripts from executing to protect users from malware. The `.bat` file acts as a transparent, secure bridge that temporarily bypasses the Execution Policy for that single session, ensuring a seamless start without permanently lowering your system's security posture. Students are encouraged to open the `.bat` file in any text editor to verify its contents.

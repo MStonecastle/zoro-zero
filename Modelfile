@@ -5,10 +5,10 @@
 #
 # DESCRIPTION:
 #   Custom model specification that overrides Ollama's default runtime 4K context
-#   window, pre-allocating a dedicated 64,000-token KV Cache in GPU VRAM.
+#   window, pre-allocating a dedicated 64K-token KV Cache in GPU VRAM.
 #
 # NOTES:
-#   - Base model: Nous Hermes 3 8B.
+#   - Base model: Qwen 3 8B.
 #   - Allocates ~4.2 GB of VRAM specifically for the key-value context layer.
 # =============================================================================
 
