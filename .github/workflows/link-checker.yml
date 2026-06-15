@@ -8,15 +8,12 @@ on:
   schedule:
     - cron: '0 0 * * 0' # Weekly run on Sundays
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
   check-links:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Link Checker
         uses: lycheeverse/lychee-action@v2
