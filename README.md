@@ -7,7 +7,7 @@ Author: "Team-404, Michelle Stonecastle-20260527: v1.0.0"
 
 # Zoro-Zero: Turnkey Local Offline AI Agent Stack
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/license/MIT)
 [![Docker](https://img.shields.io/badge/Docker-Containerized-blue.svg)](https://www.docker.com/)
 [![Ollama](https://img.shields.io/badge/Ollama-Inference-orange.svg)](https://ollama.com/)
 ![Model: Qwen 3](https://img.shields.io/badge/Model-Qwen_3_8B-purple.svg)

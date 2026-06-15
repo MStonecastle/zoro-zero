@@ -77,7 +77,7 @@ Because DuckDuckGo is a search-only index, the `web_extract` tool (which downloa
 If students require the agent to scrape and read full documentation pages, they must configure a dedicated **extraction backend** using one of the following free-tier providers:
 
 #### Option A: Tavily AI (1,000 free searches/month)
-1. Sign up for a free developer account at [app.tavily.com](https://app.tavily.com/).
+1. Sign up for a free developer account at [app.tavily.com](https://app.tavily.com/home).
 2. Copy your generated API key.
 3. Open your host `.env` file and append the key:
    ```bash
@@ -91,7 +91,7 @@ If students require the agent to scrape and read full documentation pages, they 
    ```
 
 #### Option B: Firecrawl (500 free credits/month)
-1. Sign up for a free developer account at [firecrawl.dev](https://firecrawl.dev/).
+1. Sign up for a free developer account at [firecrawl.dev](https://www.firecrawl.dev/).
 2. Copy your API key.
 3. Open your host `.env` file and append:
    ```bash
@@ -180,16 +180,16 @@ When a student clones the Zoro-Zero repository, the actual `.env` file is exclud
 
 *   **`OLLAMA_HOST=http://ollama:11434`**
     *   *System Mechanics*: Configures the DNS endpoint for the agent gateway to connect to Ollama. Within the virtual container bridge network (`zoro-network`), Docker acts as a private DNS resolver, routing the hostname `ollama` directly to the `zoro-ollama` container interface on port `11434`.
-    *   *Reference Specification*: [Docker Compose Networking Specification](https://docs.docker.com/compose/networking/)
+    *   *Reference Specification*: [Docker Compose Networking Specification](https://docs.docker.com/compose/how-tos/networking/)
 *   **`MODEL=qwen3:8b-64k`**
     *   *System Mechanics*: Declares the target model tag built inside Ollama. By utilizing the customized context parameter `num_ctx 65536`, the Ollama inference engine allocates a mathematically perfect native 4.2 GB KV cache in VRAM to safely process massive context windows.
-    *   *Reference Specification*: [Ollama Modelfile Reference Guide](https://github.com/ollama/ollama/blob/main/docs/modelfile.md)
+    *   *Reference Specification*: [Ollama Modelfile Reference Guide](https://github.com/ollama/ollama/blob/main/docs/modelfile.mdx)
 *   **`TELEGRAM_BOT_TOKEN`, `TELEGRAM_ALLOWED_USERS`, `TELEGRAM_HOME_CHANNEL`**
     *   *System Mechanics*: Standard parameters to orchestrate the Telegram API Gateway. The token authenticates the container's gateway handler. The allowed user parameter acts as an access control list (ACL), parsing incoming chat payloads and silently dropping instructions from user IDs not listed on the whitelist, preventing remote terminal execution by unauthorized third parties.
     *   *Reference Specification*: [Telegram BotFather API Reference](https://core.telegram.org/bots/features#botfather)
 *   **`DISCORD_BOT_TOKEN`, `DISCORD_ALLOWED_USERS`**
     *   *System Mechanics*: Authenticates the gateway against Discord's WebSocket API. Under the hood, this establishes a persistent gateway connection. Like the Telegram gateway, the user ACL filters messages before passing them to the supervisor logic, shifting security left to the ingress boundary.
-    *   *Reference Specification*: [Discord Developer Portal Application Guide](https://discord.com/developers/docs/intro)
+    *   *Reference Specification*: [Discord Developer Portal Application Guide](https://docs.discord.com/developers/intro)
 
 ---
 
@@ -211,7 +211,7 @@ Launch the isolated container services using the pre-flight hardware detection s
 > You are encouraged to open `Start-Zoro-Zero.bat` in a text editor to verify its contents!
 
 *   *Compose Mechanics*: The script probes `nvidia-smi`. If successful, it merges the GPU reservation override. It then reads `docker-compose.yml`, injects variables from `.env`, pulls target container images, constructs the private `zoro-network` bridge, sets up the physical host volume bind-mounts, and boots all services in background mode.
-*   *Reference Specification*: [Docker Compose Storage Bind-Mount Reference](https://docs.docker.com/storage/bind-mounts/)
+*   *Reference Specification*: [Docker Compose Storage Bind-Mount Reference](https://docs.docker.com/engine/storage/bind-mounts/)
 
 ---
 

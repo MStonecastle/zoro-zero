@@ -30,7 +30,7 @@ For a more visual, user-friendly experience, students can utilize **Docker Deskt
 
 > [!IMPORTANT]
 > **Prerequisites**: Ensure you have downloaded and installed [Docker Desktop for Windows](https://www.docker.com/products/docker-desktop/) and that the WSL 2 backend is enabled.
-> * Official Reference: [Docker Desktop Windows Installation Guide](https://docs.docker.com/desktop/install/windows-install/)
+> * Official Reference: [Docker Desktop Windows Installation Guide](https://docs.docker.com/desktop/setup/install/windows-install/)
 
 ### Graphical Alternatives to CLI Operations:
 
